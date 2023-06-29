@@ -22,3 +22,8 @@ framework:
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
+        buses:
+            messenger.bus.default:
+                middleware:
+                    # service ids that implement Symfony\Component\Messenger\Middleware\MiddlewareInterface
+                    - 'App\Messenger\RequestIdMiddleware'
