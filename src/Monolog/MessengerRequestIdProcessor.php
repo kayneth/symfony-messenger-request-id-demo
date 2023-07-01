@@ -2,8 +2,7 @@
 
 namespace App\Monolog;
 
-use App\Messenger\RequestIdStamp;
-use Symfony\Component\Messenger\Envelope;
+use App\Messenger\Stamp\RequestIdStamp;
 use Monolog\Attribute\AsMonologProcessor;
 use Monolog\LogRecord;
 
@@ -12,13 +11,9 @@ class MessengerRequestIdProcessor
 {
     private ?string $requestId = null;
 
-    public function setEnvelope(Envelope $envelope): void
+    public function setStamp(?RequestIdStamp $stamp): void
     {
-        /** @var RequestIdStamp|null $stamp */
-        $stamp = $envelope->last(RequestIdStamp::class);
-        if ($stamp !== null) {
-            $this->requestId = $stamp->getRequestId();
-        }
+        $this->requestId = $stamp?->getRequestId();
     }
 
     public function __invoke(LogRecord $record): LogRecord

@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Middleware;
+namespace App\Request\Listener;
 
-use App\Service\RequestIdGeneratorInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\KernelEvents;
+use App\Request\RequestIdGeneratorInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
-class RequestIdMiddleware implements EventSubscriberInterface
+class RequestIdSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private RequestIdGeneratorInterface $requestIdGenerator
@@ -21,15 +18,15 @@ class RequestIdMiddleware implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => ['onKernelRequest', 15],
-            KernelEvents::RESPONSE => ['onKernelResponse', -15],
+            KernelEvents::REQUEST => ['onKernelRequest'],
+            KernelEvents::RESPONSE => ['onKernelResponse'],
         ];
     }
 
     public function onKernelRequest(RequestEvent $event)
     {
         $request = $event->getRequest();
-        if (!$request->headers->has('X-Request-ID')) {
+        if (! $request->headers->has('X-Request-ID')) {
             $request->headers->set('X-Request-ID', $this->requestIdGenerator->generate());
         }
     }
@@ -38,7 +35,7 @@ class RequestIdMiddleware implements EventSubscriberInterface
     {
         $response = $event->getResponse();
         $request = $event->getRequest();
-        if (!$response->headers->has('X-Request-ID') && $request->headers->has('X-Request-ID')) {
+        if (! $response->headers->has('X-Request-ID') && $request->headers->has('X-Request-ID')) {
             $response->headers->set('X-Request-ID', $request->headers->get('X-Request-ID'));
         }
     }

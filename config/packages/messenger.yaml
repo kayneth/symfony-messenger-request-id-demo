@@ -19,6 +19,8 @@ framework:
             Symfony\Component\Mailer\Messenger\SendEmailMessage: async
             Symfony\Component\Notifier\Message\ChatMessage: async
             Symfony\Component\Notifier\Message\SmsMessage: async
+            App\Messenger\Message\TracedMessage: async
+            App\Messenger\Message\AsyncDispatchedMessage: async
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async

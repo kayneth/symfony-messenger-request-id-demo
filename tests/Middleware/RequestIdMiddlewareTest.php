@@ -2,15 +2,15 @@
 
 namespace App\Tests\Middleware;
 
-use App\Middleware\RequestIdMiddleware;
-use App\Service\RequestUuidGenerator;
+use App\Request\Listener\RequestIdSubscriber;
+use App\Request\RequestUuidGenerator;
 use App\Tests\Stubs\FixedRequestIdGenerator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 class RequestIdMiddlewareTest extends TestCase
 {
@@ -18,12 +18,12 @@ class RequestIdMiddlewareTest extends TestCase
     {
         $requestId = 'test-id';
 
-        $middleware = new RequestIdMiddleware(new FixedRequestIdGenerator($requestId));
+        $middleware = new RequestIdSubscriber(new FixedRequestIdGenerator($requestId));
 
         $request = new Request();
         $event = new RequestEvent(
-            $this->createMock(HttpKernelInterface::class), 
-            $request, 
+            $this->createMock(HttpKernelInterface::class),
+            $request,
             HttpKernelInterface::MAIN_REQUEST
         );
 
@@ -36,16 +36,16 @@ class RequestIdMiddlewareTest extends TestCase
     {
         $requestId = 'test-id';
 
-        $middleware = new RequestIdMiddleware(new RequestUuidGenerator);
+        $middleware = new RequestIdSubscriber(new RequestUuidGenerator());
 
         $request = new Request();
         $request->headers->set('X-Request-ID', $requestId);
         $response = new Response();
 
         $event = new ResponseEvent(
-            $this->createMock(HttpKernelInterface::class), 
-            $request, 
-            HttpKernelInterface::MAIN_REQUEST, 
+            $this->createMock(HttpKernelInterface::class),
+            $request,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 

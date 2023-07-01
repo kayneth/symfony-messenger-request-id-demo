@@ -2,13 +2,12 @@
 
 namespace App\Tests\Monolog;
 
-use App\Messenger\RequestIdStamp;
+use App\Messenger\Stamp\RequestIdStamp;
 use App\Monolog\MessengerRequestIdProcessor;
 use DateTimeImmutable;
 use Monolog\Level;
 use Monolog\LogRecord;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Messenger\Envelope;
 
 class MessengerRequestIdProcessorTest extends TestCase
 {
@@ -17,8 +16,7 @@ class MessengerRequestIdProcessorTest extends TestCase
         $requestId = 'test-id';
         $processor = new MessengerRequestIdProcessor();
 
-        $envelope = (new Envelope(new \stdClass()))->with(new RequestIdStamp($requestId));
-        $processor->setEnvelope($envelope);
+        $processor->setStamp(new RequestIdStamp($requestId));
 
         $record = $processor(new LogRecord(
             new DateTimeImmutable(),

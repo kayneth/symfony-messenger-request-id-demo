@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Request;
 
 use Symfony\Component\Uid\Uuid;
 

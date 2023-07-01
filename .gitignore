@@ -1,3 +1,5 @@
+.idea
+*.out
 
 ###> symfony/framework-bundle ###
 /.env.local

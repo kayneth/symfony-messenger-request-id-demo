@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Messenger;
+namespace App\Messenger\Stamp;
 
 use Symfony\Component\Messenger\Stamp\StampInterface;
 
 class RequestIdStamp implements StampInterface
 {
-    public function __construct(private string $requestId)
-    {
+    public function __construct(
+        private string $requestId
+    ) {
     }
 
     public function getRequestId(): string

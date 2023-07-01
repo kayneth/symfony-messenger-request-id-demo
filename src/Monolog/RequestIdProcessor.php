@@ -2,18 +2,19 @@
 
 namespace App\Monolog;
 
-use Symfony\Component\HttpFoundation\RequestStack;
 use Monolog\Attribute\AsMonologProcessor;
 use Monolog\LogRecord;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 #[AsMonologProcessor]
 class RequestIdProcessor implements \Monolog\Processor\ProcessorInterface
 {
-    public function __construct(private RequestStack $requestStack)
-    {
+    public function __construct(
+        private RequestStack $requestStack
+    ) {
     }
 
-    public function __invoke(LogRecord $record) : LogRecord
+    public function __invoke(LogRecord $record): LogRecord
     {
         $request = $this->requestStack->getCurrentRequest();
         if ($request && $request->headers->has('X-Request-ID')) {
